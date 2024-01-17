@@ -3,7 +3,7 @@ h1, h2, h3, h4, h5 {text-align: center;}
 h1 {margin-bottom: 24px; font-size: 2.2em; font-weight: normal;}
 h2 {margin-top: 48px; font-weight: bold !important;}
 h1, h2, h3, h4, h5, a, p, span, body {font-weight: normal; font-family: "Google Sans", sans-serif;}
-.header {background-color: #fdfdfd; width: 85%; padding-top: 48px; padding-bottom: 8px;}
+.header {background-color: #fdfdfd; width: 85%; left: 7.5%; padding-top: 48px; padding-bottom: 8px;}
 .links {width: 100%; margin: auto; text-align: center; padding-top: 8px;}
 .content {max-width: 1260px; margin: auto; margin-top: 48px; margin-bottom: 64px;}
 a, h2 {color: #c03d3e; text-decoration: none;}
