@@ -1767,10 +1767,31 @@
       </div>
     </div>
   
-  
-
-
     <div class="hr-long"></div>
+
+    <style>
+      li::before {
+        content: "\2022"; /* 使用Unicode小圆点符号 */
+        color: #000; /* 小圆点颜色 */
+        font-weight: bold; /* 加粗 */
+        display: inline-block;
+        width: 1em; /* 调整小圆点与文本之间的距离 */
+        margin-left: -1em; /* 负边距使小圆点位于文本之前 */
+      }
+    </style>
+
+    <div class="content" style="max-width: 960px;">
+      <h2 style="color: #f1c432;">Contact</h2>
+      <p>
+        If you have any questions, please feel free to contact us:
+      </p>
+      <ul style="list-style-type: none; padding: 0; margin-left: 50px">
+        <li><span style="font-weight: bold;">Yuanchen Ju: </span><span>juuycc0213@gmail.com</span></li>
+        <li><span style="font-weight: bold;">Kaizhe Hu: </span><span>hkz22@mails.tsinghua.edu.cn</span></li>
+        <li><span style="font-weight: bold;">Huazhe Xu: </span><span>huazhe_xu@mail.tsinghua.edu.cn</span></li>
+      </ul>
+    </div>
+	
     <div class="content" style="max-width: 960px;">
       <h2 style="color: #f1c432;">Citation</h2>
       <p style="color: #f1c432;">
