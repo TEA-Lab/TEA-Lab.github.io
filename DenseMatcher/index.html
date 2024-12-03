@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="3D dense correspondence enables complex robotic manipulation on novel objects with just one demo.">
+  <meta name="keywords" content="3D Vision, Computer Vision, Robotics, Correspondence">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DenseMatcher: Learning 3D Semantic Correspondence for Category-Level Manipulation from One Demo</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/banana-icon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://.github.io">
+            xxx
+          </a>
+          <a class="navbar-item" href="https://.github.io">
+            xxx
+          </a>
+          <a class="navbar-item" href="https://.github.io">
+            xxx
+          </a>
+          <a class="navbar-item" href="https://.github.io">
+            xxx
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title"><span class="stylized-text">Dense</span><span class="stylized-text2">Matcher</span> <img src="./static/images/banana-icon.svg" alt="Banana Icon" width="36" height="36">: Learning 3D Semantic <span class="rainbow-text2">Correspondence</span> for Category-Level Manipulation from One Demo</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://josephzhu.com/">Junzhe Zhu</a><sup>*2,5</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=jOPXmhIAAAAJ&hl=en">Yuanchen Ju</a><sup>*3,1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.junyi42.com/">Junyi Zhang</a><sup>4,7</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://wang-muhan.github.io/">Muhan Wang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://gemcollector.github.io/">Zhecheng Yuan</a><sup>1,3,6</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://hukz18.github.io/">Kaizhe Hu</a><sup>1,3,6</sup>,
+            </span>
+            <span class="author-block">
+              <a href="http://hxu.rocks/">Huazhe Xu</a><sup>1,3,6</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>IIIS, Tsinghua University</span>
+            <span class="author-block"><sup>2</sup>Tepan Inc.</span>
+            <span class="author-block"><sup>3</sup>Shanghai Qi Zhi Institute</span>
+            <span class="author-block"><sup>4</sup>UC Berkeley</span>
+            <span class="author-block"><sup>5</sup>Stanford University</span>
+            <span class="author-block"><sup>6</sup>Shanghai AI Lab</span>
+            <span class="author-block"><sup>7</sup>Shanghai Jiao Tong University</span>
+          </div> 
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <img src="static/figures/teaser.png" width=140% />
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+        <p class="abstract-text">Dense 3D correspondence can enhance robotic manipulation by enabling the generalization of spatial, functional, and dynamic information from one object to an unseen counterpart.  Compared to shape correspondence, semantic correspondence is more effective in generalizing across different object categories.</p>
+        <p class="abstract-text">To this end, we present <span class="stylized-text3">Dense</span><span class="stylized-text4">Matcher</span>, a method capable of computing <b>3D correspondences</b> between in-the-wild objects that share similar structures. DenseMatcher first computes vertex features by projecting multiview 2D features onto meshes and refining them with a 3D network, and subsequently finds dense correspondences with the obtained features using functional map. In addition, we craft the first 3D matching dataset that contains <span class="rainbow-text"><b>colored</b></span> object meshes across diverse categories.</p>
+        <p class="abstract-text">In our experiments, we show that DenseMatcher significantly outperforms prior 3D matching baselines by 43.5%. We demonstrate the downstream effectiveness of DenseMatcher in (i) robotic manipulation, where it achieves <b>cross-instance</b> and <b>cross-category</b> generalization on long-horizon complex manipulation tasks from observing only <b>one demo</b>; (ii) zero-shot color mapping between digital assets, where appearance can be transferred between different objects with relatable geometry.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="content">
+      <h2 class="title is-2" style="text-align: center;">Method</h2>
+      <img src="static/figures/method.png" width=100% />
+      <p class="bulk-text" style="margin-top:2%">
+        <b>DenseMatcher</b> computes <i>dense correspondences</i> between two colored objects via the following stages: (1) 2D feature extraction, (2) 3D feature refinement, and (3) dense correspondence computation.
+      </p>
+      <p class="bulk-text">
+        In the first stage, <a href="https://sd-complements-dino.github.io/" target="_blank">SD-DINO</a> is used to extract <b>2D features maps</b> from different rendered views. 
+        The feature for each vertex is then computed by averaging features retrieved from different views, as shown below.
+      </p>
+      <div class="columns is-centered">
+        <div class="column">
+          <div class="container3D2" id="method0"></div>
+        </div>
+        <div class="column">
+          <div class="container3D2" id="method1"></div>
+        </div>
+      </div>
+      <p class="method-caption"> Noisy Multiview Features \( f_\text{multiview} \) &nbsp; (Drag to Rotate)</p>
+      <p class="bulk-text">
+        In the second stage, since the above feature is noisy and does not utilize geometry information, 
+        we concatenate it with the vertex positions and then <b>refine</b> the feature with <a href="https://arxiv.org/abs/2012.00888" target="_blank">DiffusionNet</a>, a <b>3D</b> neural network architecture specifically designed for meshes. 
+      </p>
+      <div class="columns is-centered">
+        <div class="column">
+          <div class="container3D2" id="method2"></div>
+        </div>
+        <div class="column">
+          <div class="container3D2" id="method3"></div>
+        </div>
+      </div>
+      <p class="method-caption"> Refined Output Features \( f_\text{output} \) &nbsp; (Drag to Rotate)</p>
+      <p class="bulk-text">
+        Finally, using refined features of two objects, we compute <b>dense correspondences</b> by solving for 
+        a <a href="https://cse291-i.github.io/WI18/LectureSlides/L17_Functional_Map.pdf" target="_blank">functional map</a> between them  (with our own novel optimization constraints!)
+      </p>
+      <div class="image-container">
+        <img src="./static/figures/matched_lines_rotated.png" alt="Centered Image" class="centered-image">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" controls muted loop playsinline height="100%">
+        <source src="./static/our_videos/new_teaser_v2.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        Our robot deployment pipeline first finds manipulation keypoints on a <i>template</i> object with a hand-object detector, and then transfers them to the <i>target</i> object seen by the robot for downstream manipulation via our proposed <b>DenseMatcher</b> correspondence model. 
+      </h2>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="content">
+      <h2 class="title is-2" style="text-align: center;">Robotic Experiments</h2>
+      <p class="bulk-text">
+        Our method only requires a <b>single</b> RGB-D human demo video for each task.
+        The robot mimicks the human action by transferring keypoints across different object instances and categories,
+        maintaining spatial and semantic consistency throughout tasks requiring <b>multiple steps and graps</b>.
+      </p>
+      <div class="content">
+        <div class="buttons is-centered">
+          <button class="button is-primary" id="load-banana">Peeling a Banana</button>
+          <button class="button is-primary" id="load-carrot">Watering and Picking Carrots</button>
+          <button class="button is-primary" id="load-flower">Putting Flowers into a Vase</button>
+          <button class="button is-primary" id="load-tree">Decorating a Christmas Tree</button>
+          <button class="button is-primary" id="load-shoes">Organizing Shoes</button>
+          <button class="button is-primary" id="load-dog">Transferring Keypoints</button>
+        </div>
+        <div class="columns is-centered">
+          <div class="column" id="left-videos">
+          </div>
+          <div class="column" id="right-videos">
+          </div>
+        </div>
+        <p id="task-caption" class="robot-caption"></p>
+        <div class="vertical-space-small"></div>
+      </div>
+    </div>
+    <!--/ Robot Demos. -->
+    
+    <!--/ Robot Demos. -->
+
+    <!-- Annotation. -->
+    <div class="content">
+      <h2 class="title is-2" style="text-align:center; margin-top:60px;">DenseCorr3D Dataset</h2>
+      <p class="bulk-text">We release our training and test dataset <b>DenseCorr3D</b>, which contains 589 <span class="rainbow-text"><b>colored</b></span> assets across 23 daily object categories. 
+        Since previous 3D matching datasets do not contain colors and focus on few categories, our dataset is the first to provide colored meshes across diverse categories.
+      </p> 
+      <p class="bulk-text">Our dense correspondence annotation comes in the form of <b>semantic groups</b>, 
+        which divides vertices of each asset into corresponding groups that are consistent within each category. Below are some examples.
+      </p>
+      
+      <div class="buttons is-centered">
+        <button class="button is-primary" id="load-animals">Animals</button>
+        <button class="button is-primary" id="load-cars">Cars</button>
+        <button class="button is-primary" id="load-apples">Apples</button>
+        <button class="button is-primary" id="load-bananas">Bananas</button>
+      </div>
+      
+      <div class="content">
+        <p class="category-caption"> Colored Objects </p>
+        <img id="category-image" src="./static/figures/placeholder.png" width="100%" />
+        <p class="category-caption"> Annotations (Try Dragging & Scrolling!) </p>
+        <div class="columns is-centered">
+          <div class="column">
+            <div class="container3D" id="container_annotation0"></div>
+          </div>
+          <div class="column">
+            <div class="container3D" id="container_annotation1"></div>
+          </div>
+          <div class="column">
+            <div class="container3D" id="container_annotation2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--/ Annotation. -->
+
+    <!-- Animation. -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Animation</h2>
+
+        <h3 class="title is-4">Interpolating states</h3>
+        <div class="content has-text-justified">
+          <p>
+            We can also animate the scene by interpolating the deformation latent codes of two input
+            frames. Use the slider here to linearly interpolate between the left frame and the right
+            frame.
+          </p>
+        </div>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/images/interpolate_start.jpg"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Start Frame</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/images/interpolate_end.jpg"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">End Frame</p>
+          </div>
+        </div>
+        <br/>
+
+        <h3 class="title is-4">Re-rendering the input video</h3>
+        <div class="content has-text-justified">
+          <p>
+            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
+            viewpoint such as a stabilized camera by playing back the training deformations.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="replay-video"
+                 controls
+                 muted
+                 preload
+                 playsinline
+                 width="75%">
+            <source src="./static/videos/replay.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+    </div> -->
+    <!--/ Animation. -->
+
+
+    <!-- Concurrent Work. -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            There's a lot of excellent work that was introduced around the same time as ours.
+          </p>
+          <p>
+            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
+          </p>
+          <p>
+            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
+            both use deformation fields to model non-rigid scenes.
+          </p>
+          <p>
+            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
+          </p>
+          <p>
+            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+          </p>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Concurrent Work. -->
+
+  </div>
+</section>
+
+<!-- <section class="hero failure">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="subtitle has-text-centered">
+        A video of the robot manipulation failure.
+      </h2>
+      <video id="failure" controls muted loop playsinline height="100%">
+        <source src="./static/our_videos/output.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section> -->
+<!-- 
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {xxx},
+  title     = {xxx},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/xxx" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer> -->
+<script type="module" src="static/js/switch_videos.js"></script>
+<script type="module" src="static/js/render_method.js"></script>
+<script type="module" src="static/js/render.js"></script>
+
+</body>
+</html>
+
+
+
+    <!-- <div class="content">
+      <h2 class="title is-2" style="text-align: center;">Robotic Experiments</h2>
+      <p style="font-size: 1.2em;">
+        Our method only requires a single RGB-D human demo video for each task.
+        The robot mimicks the human action by transferring keypoints across different object instances and categories,
+        maintaining spatial and semantic consistency throughout tasks requiring multiple steps and graps.
+      </p>
+      <div class="content">
+        <div class="columns is-centered">
+          <div class="column">
+            <video id="banana-human" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/our_videos/human_video/new_banana.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <div class="column">
+            <video id="banana-robot" controls playsinline height="100%">
+              <source src="./static/our_videos/robot_video/new_banana_robot1.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="robot-caption">Peeling a Banana</p>
+        <div class="vertical-space-small"></div>
+
+      
+        <div class="columns is-centered">
+          <div class="column">
+            <video id="carrot-human" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/our_videos/human_video/new_carrot.mp4"
+                      type="video/mp4">
+            </video>
+
+            <video id="kettle-human" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/our_videos/human_video/new_kettle.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <div class="column">
+            <img src="./static/our_videos/robot_video/empty_img.png">
+            <video id="carrot-robot" controls playsinline height="100%">
+              <source src="./static/our_videos/robot_video/new_Carrot_robot_1_2x.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="robot-caption">Watering Carrots</p>
+        <div class="vertical-space-small"></div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <video id="flower-human" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/our_videos/human_video/new_flower_human_video.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="column">
+            <video id="flower-robot" controls playsinline height="100%">
+              <source src="./static/our_videos/robot_video/new_flower_robot_1.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="robot-caption">Putting Flowers into a Vase</p>
+        <div class="vertical-space-small"></div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <video id="tree-human" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/our_videos/human_video/new_tree.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="column">
+            <video id="tree-robot" controls playsinline height="100%">
+              <source src="./static/our_videos/robot_video/new_Christmas_robot1.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="robot-caption">Decorating a Christmas Tree</p>
+        <div class="vertical-space-small"></div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <video id="shoes-human" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/our_videos/human_video/new_shoes.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="column">
+            <video id="shoes-robot" controls playsinline height="100%">
+              <source src="./static/our_videos/robot_video/new_shoes_robot_1.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="robot-caption">Organizing Shoes</p>
+        <div class="vertical-space-small"></div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <h6>Template</h6>
+            <img src="./static/our_videos/dog/color.png">
+            <h6>Target</h6>
+            <img src="./static/our_videos/dog/color2.png">
+          </div>
+          <div class="column">
+            <img src="./static/our_videos/robot_video/empty_img.png">
+            <video id="carrot-robot" controls playsinline height="100%">
+              <source src="./static/our_videos/robot_video/new_long_5x.mp4"
+              type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="robot-caption">Transferring Pre-labelled Keypoints to New Objects <br> and Poking Them with a Pen</p>
+        <div class="vertical-space-small"></div>
+
+      </div>
+    </div> -->
