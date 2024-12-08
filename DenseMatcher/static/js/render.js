@@ -120,6 +120,10 @@ function loadCategory(category) {
     }
   });
 }
+  document.addEventListener('DOMContentLoaded', function() {
+    // 默认加载“Animals”类别的内容
+    loadCategory('animal');
+  });
 
 // Event listeners for the buttons
 document.getElementById('load-animals').addEventListener('click', () => loadCategory('animal'));
