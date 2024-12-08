@@ -129,3 +129,12 @@ function loadContent(humanContent1, humanContent2, robotContent, caption, isImag
       true
     );
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadContent(
+      './static/our_videos/human_video/new_banana.mp4',
+      null,
+      './static/our_videos/robot_video/new_banana_robot1.mp4',
+      'Peeling a Banana'
+    );
+  });
