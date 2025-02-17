@@ -277,7 +277,6 @@ body {
   color: transparent;
 }
 
-
 .stylized-text3 {
   /* color: #FF6347;  */
   font-weight: bold;
@@ -287,4 +286,35 @@ body {
   /* color: magenta;  */
   font-weight: bold;
   /* font-style: italic; */
+}
+
+
+
+.conference-highlight {
+  margin-top: 20px; 
+  color: red; 
+  font-weight: bold;
+}
+
+/* Citation Module Styles */
+#BibTeX {
+  background-color: #f9f9f9; /* Light grey background */
+  padding: 20px 0; /* Padding at the top and bottom */
+}
+
+#BibTeX .title {
+  color: #366a9f; /* Dark blue color for the title */
+}
+
+#BibTeX pre {
+  background-color: #fff; /* White background for the code block */
+  border: 1px solid #ddd; /* Light grey border for the code block */
+  padding: 15px; /* Padding inside the code block */
+  border-radius: 5px; /* Rounded corners for the code block */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+#BibTeX code {
+  font-family: 'Courier New', Courier, monospace; /* Monospace font for the code */
+  color: #333; /* Dark grey color for the code text */
 }
