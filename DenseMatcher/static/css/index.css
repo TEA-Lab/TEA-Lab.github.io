@@ -318,3 +318,6 @@ body {
   font-family: 'Courier New', Courier, monospace; /* Monospace font for the code */
   color: #333; /* Dark grey color for the code text */
 }
+html {
+  scroll-behavior: smooth;
+}
