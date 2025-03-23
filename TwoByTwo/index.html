@@ -1803,48 +1803,6 @@
 
 </div>
 
-<script>
-  // 获取按钮和所有隐藏视频容器的引用
-  const showMoreBtn = document.getElementById('showMoreBtn');
-  const hiddenRowContainers = document.querySelectorAll('.hidden-row');
-
-  // 设置初始状态为隐藏
-  hiddenRowContainers.forEach(function(container) {
-    container.style.display = 'none';
-  });
-
-  // 点击按钮时切换显示/隐藏所有隐藏视频容器
-  showMoreBtn.addEventListener('click', function() {
-    hiddenRowContainers.forEach(function(container) {
-      if (container.style.display === 'none') {
-        container.style.display = 'block';
-        showMoreBtn.textContent = 'Hide';
-      } else {
-        container.style.display = 'none';
-        showMoreBtn.textContent = 'More Tasks';
-      }
-    });
-  });
-
-  const showResultBtn = document.getElementById('showDetails');
-  const hiddenResContainers = document.querySelectorAll('.hidden-result');
-
-  hiddenResContainers.forEach(function(container) {
-    container.style.display = 'none';
-  });
-
-  showResultBtn.addEventListener('click', function() {
-    hiddenResContainers.forEach(function(container) {
-      if (container.style.display === 'none') {
-        container.style.display = 'block';
-        showResultBtn.textContent = 'Hide';
-      } else {
-        container.style.display = 'none';
-        showResultBtn.textContent = 'Detailed Results';
-      }
-    });
-  });
-</script>
 
 </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
 
